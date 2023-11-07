@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/Kagami/go-face"
+	"github.com/barnex/cuda5/cu"
 	"gocv.io/x/gocv"
 	"gocv.io/x/gocv/contrib"
 	"gopkg.in/eapache/queue.v1"
@@ -103,7 +104,7 @@ func multiObjshowRectangleWithName(imgPath string, recfaces []face.Face, name []
 }
 
 func main() {
-	fmt.Println("Facial Recognition System v0.01")
+	fmt.Println("Facial Recognition System v0.01", cu.DeviceGet(0).Name())
 
 	if len(os.Args) < 2 {
 		fmt.Println("How to run:\n\tgo run main.go 1/2/3(camera)\n")

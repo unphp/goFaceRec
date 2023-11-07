@@ -1,5 +1,7 @@
 github.com/Kagami/go-face v0.0.0-20210630145111-0c14797b4d0e h1:lqIUFzxaqyYqUn4MhzAvSAh4wIte/iLNcIEWxpT/qbc=
 github.com/Kagami/go-face v0.0.0-20210630145111-0c14797b4d0e/go.mod h1:9wdDJkRgo3SGTcFwbQ7elVIQhIr2bbBjecuY7VoqmPU=
+github.com/barnex/cuda5 v0.0.0-20171012184954-da30a9b287d8 h1:lnbKU7kkMoF75PDPYaj0DLoD0p6lWtzeyXSR94PrQto=
+github.com/barnex/cuda5 v0.0.0-20171012184954-da30a9b287d8/go.mod h1:GnBnFz4V/+kxwKFnquvOOi+IjZoVJsIUbcAVOXLCxCo=
 github.com/hybridgroup/mjpeg v0.0.0-20140228234708-4680f319790e/go.mod h1:eagM805MRKrioHYuU7iKLUyFPVKqVV6um5DAvCkUtXs=
 github.com/pascaldekloe/goe v0.1.0/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 gocv.io/x/gocv v0.35.0 h1:Qaxb5KdVyy8Spl4S4K0SMZ6CVmKtbfoSGQAxRD3FZlw=

@@ -116,22 +116,22 @@ func main() {
 	frameQueue := queue.New()
 	argsChan := make(chan string)
 
-	go getFrameFromCamera(frameQueue,argsChan)
+	go getFrameFromCamera(frameQueue, argsChan)
 	wg.Add(1)
 
 	time.Sleep(1)
 
-	go recFaceAndPushToRtmp(frameQueue,argsChan)
+	go recFaceAndPushToRtmp(frameQueue, argsChan)
 	wg.Add(1)
 
 	wg.Wait()
 	fmt.Println("main exit...")
 }
 
-func getFrameFromCamera(queue *queue.Queue,wArgsChan chan<- string) {
+func getFrameFromCamera(queue *queue.Queue, wArgsChan chan<- string) {
 	// set src
 	//deviceID := 0
-	deviceID := "rtsp://admin:1234abcd@192.168.0.100/"
+	deviceID := "rtsp://admin:aA12345678@192.168.1.179:554/Streaming/Channels/101"
 
 	// open webCam
 	webCam, err := gocv.OpenVideoCapture(deviceID)
@@ -153,16 +153,16 @@ func getFrameFromCamera(queue *queue.Queue,wArgsChan chan<- string) {
 	height := int(webCam.Get(gocv.VideoCaptureFrameHeight))
 	fps := int(webCam.Get(gocv.VideoCaptureFPS))
 
-	cmdArgs :=fmt.Sprintf("%s %s %s %d %s %s",
+	cmdArgs := fmt.Sprintf("%s %s %s %d %s %s",
 		"ffmpeg -y -an -f rawvideo -vcodec rawvideo -pix_fmt bgr24 -s",
 		fmt.Sprintf("%dx%d", width, height),
 		"-r",
 		fps,
 		"-i - -c:v libx264 -pix_fmt yuv420p -preset ultrafast -f flv",
-		"rtmp://192.168.0.173:1935/live/movie",
+		"rtmp://192.168.2.143:1935/live/movie",
 	)
 	//fmt.Printf("cmdargs:%s\n",cmdArgs)
-	wArgsChan <-cmdArgs
+	wArgsChan <- cmdArgs
 	fmt.Printf("send cmdargs to push routine ok\n")
 
 	for {
@@ -192,7 +192,7 @@ func getFrameFromCamera(queue *queue.Queue,wArgsChan chan<- string) {
 	wg.Done()
 }
 
-func recFaceAndPushToRtmp(queue *queue.Queue,rArgsChan <-chan string) {
+func recFaceAndPushToRtmp(queue *queue.Queue, rArgsChan <-chan string) {
 	// prepare image matrix
 	img := gocv.NewMat()
 	defer img.Close()
@@ -234,10 +234,10 @@ func recFaceAndPushToRtmp(queue *queue.Queue,rArgsChan <-chan string) {
 		if queue.Length() > 0 {
 			queueImg := queue.Get(0)
 			switch qImg := queueImg.(type) {
-				case gocv.Mat:
-					img = qImg
-				default:
-					continue
+			case gocv.Mat:
+				img = qImg
+			default:
+				continue
 			}
 
 			// detect faces

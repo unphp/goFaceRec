@@ -23,15 +23,13 @@ const dataDir = "images"
 const modelsDir = "models"
 const testDir = "testimages"
 
-
 func CheckErr(err error) {
 	if nil != err {
 		panic(err)
 	}
 }
 
-
-func singleObjShowRectangleWithName(imgPath string,name[] string){
+func singleObjShowRectangleWithName(imgPath string, name []string) {
 	window := gocv.NewWindow("Hello")
 
 	// method 1: opencv reRecgnizeFace and rectangle it
@@ -74,10 +72,10 @@ func singleObjShowRectangleWithName(imgPath string,name[] string){
 	}
 }
 
-func multiObjshowRectangleWithName(imgPath string,recfaces[] face.Face,name[] string) {
+func multiObjshowRectangleWithName(imgPath string, recfaces []face.Face, name []string) {
 	window := gocv.NewWindow("Hello")
-	
-	fmt.Println("mj test : multiObjshowRectangleWithName name = ", name,"\n")
+
+	fmt.Println("mj test : multiObjshowRectangleWithName name = ", name, "\n")
 
 	// method 2 : use reced faces data before
 	img := gocv.IMRead(imgPath, gocv.IMReadColor)
@@ -112,7 +110,7 @@ func main() {
 		fmt.Println("How to run:\n\tgo run main.go 1/2/3(camera)\n")
 		return
 	}
-	choseId,_ := strconv.Atoi(os.Args[1])
+	choseId, _ := strconv.Atoi(os.Args[1])
 
 	// 1. init recognizer
 	rec, err := face.NewRecognizer(modelsDir)
@@ -124,36 +122,36 @@ func main() {
 
 	// 2. set samples to the recognizer------1
 	/*
-	avengersImage := filepath.Join(dataDir, "avengers-02.jpeg")
-	faces , err := rec.RecognizeFile(avengersImage)
-	if err != nil {
-		log.Fatalf("Can't recognize: %v", err)
-	}
-	fmt.Println("Number of Faces in Image: ", len(faces))
+		avengersImage := filepath.Join(dataDir, "avengers-02.jpeg")
+		faces , err := rec.RecognizeFile(avengersImage)
+		if err != nil {
+			log.Fatalf("Can't recognize: %v", err)
+		}
+		fmt.Println("Number of Faces in Image: ", len(faces))
 
-	var samples []face.Descriptor
-	var avengers []int32
-	for i, f := range faces {
-		samples = append(samples, f.Descriptor)
-		// Each face is unique on that image so goes to its own category.
-		avengers = append(avengers, int32(i))
-	}
-	// Name the categories, i.e. people on the image.
-	labels := []string{
-		"Dr Strange",
-		"Tony Stark",
-		"Bruce Banner",
-		"Wong",
-	}
-	// Pass samples to the recognizer.
-	rec.SetSamples(samples, avengers)
-	fmt.Println("Pass samples to the recognizer OK,LET'S start test.")
+		var samples []face.Descriptor
+		var avengers []int32
+		for i, f := range faces {
+			samples = append(samples, f.Descriptor)
+			// Each face is unique on that image so goes to its own category.
+			avengers = append(avengers, int32(i))
+		}
+		// Name the categories, i.e. people on the image.
+		labels := []string{
+			"Dr Strange",
+			"Tony Stark",
+			"Bruce Banner",
+			"Wong",
+		}
+		// Pass samples to the recognizer.
+		rec.SetSamples(samples, avengers)
+		fmt.Println("Pass samples to the recognizer OK,LET'S start test.")
 	*/
 
 	// 2. set samples to the recognizer------2
-	var samples[] face.Descriptor
-	var avengers[] int32
-	var labels[] string
+	var samples []face.Descriptor
+	var avengers []int32
+	var labels []string
 	var count int32
 
 	// iterate src face images from given dir
@@ -191,12 +189,12 @@ func main() {
 
 	// Pass samples to the recognizer.
 	rec.SetSamples(samples, avengers)
-	fmt.Println("mj test : labels = ", labels,"\n")
+	fmt.Println("mj test : labels = ", labels, "\n")
 
-////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
 	// 3. Now let's try to classify some not yet known image.
 	//test 1 : single-objective in single picture
-	if choseId == 1{
+	if choseId == 1 {
 		fmt.Println("choseId == ", choseId)
 		singleObjImgPath := filepath.Join(testDir, "mj1.jpg")
 		//singleObjImgPath := filepath.Join(testDir, "ts.jpg")
@@ -210,7 +208,7 @@ func main() {
 			os.Exit(0)
 		}
 
-		var recName[] string
+		var recName []string
 		//singleFaceID := rec.Classify(singleFace.Descriptor)
 		singleFaceID := rec.ClassifyThreshold(singleFace.Descriptor, 0.35)
 		fmt.Println("mj retshld: ", singleFaceID)
@@ -224,13 +222,13 @@ func main() {
 		// 4. Rectangle faces and relate name
 		singleObjShowRectangleWithName(singleObjImgPath, recName)
 	}
-////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
 
 	//test 2 : multi-objective in single picture
-   if choseId == 2{
-	   	fmt.Println("choseId == ", choseId)
+	if choseId == 2 {
+		fmt.Println("choseId == ", choseId)
 		multiObjImgPath := filepath.Join(testDir, "avengers-02.jpeg")
 		//multiObjImgPath := filepath.Join(testDir, "lindan_chenlong.jpg")
 		faces, err := rec.RecognizeFileCNN(multiObjImgPath)
@@ -243,40 +241,40 @@ func main() {
 		fmt.Println("Number of Faces in Image: ", len(faces))
 
 		// rec each face in img
-		var recMultiName[] string
+		var recMultiName []string
 		for _, f := range faces {
 			//faceID := rec.Classify(f.Descriptor)
-			faceID :=rec.ClassifyThreshold(f.Descriptor,0.35)
-			fmt.Println("mj retshld: ",faceID)
+			faceID := rec.ClassifyThreshold(f.Descriptor, 0.35)
+			fmt.Println("mj retshld: ", faceID)
 			if faceID < 0 {
 				//recMultiName[i] = "unkown"
 				//fmt.Printf("Can't classify : %s\n",recName)
 				recMultiName = append(recMultiName, "unkown")
-			}else {
+			} else {
 				//recMultiName[i] = labels[faceID]
 				//fmt.Printf("Classified : %s\n",recName)
 				recMultiName = append(recMultiName, labels[faceID])
 			}
 		}
-	   fmt.Println("mj test : recMultiName = ", recMultiName,"\n")
+		fmt.Println("mj test : recMultiName = ", recMultiName, "\n")
 		// 4. Rectangle faces and relate name
-		multiObjshowRectangleWithName(multiObjImgPath,faces,recMultiName)
+		multiObjshowRectangleWithName(multiObjImgPath, faces, recMultiName)
 		//singleObjShowRectangleWithName(multiObjImgPath, recMultiName)
 	}
-////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
 
 	//test 3 : Rec&Show multi-objective from camera stream
-	if choseId == 3{
+	if choseId == 3 {
 		fmt.Println("choseId == ", choseId)
 		// method 1	: capture frmae,rec frame,push frmae with one routine
 		//cameraMultiObjShowRecFacesWithName1(rec,labels)
 
 		// method 2 : capture frmae,rec&&push frmae with two routines
-		cameraMultiObjShowRecFacesWithName2(rec,labels)
+		cameraMultiObjShowRecFacesWithName2(rec, labels)
 	}
-////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
 }
 
 /*
@@ -406,18 +404,20 @@ func cameraMultiObjShowRecFacesWithName1(rec *face.Recognizer,labels[] string){
 }*/
 
 var wg sync.WaitGroup
+
 const stopGetFrame int = 1
 const stopRecFrame int = 2
-func cameraMultiObjShowRecFacesWithName2(rec *face.Recognizer,labels[] string){
+
+func cameraMultiObjShowRecFacesWithName2(rec *face.Recognizer, labels []string) {
 	frameQueue := queue.New() // queue for frame from camera
 
-	quiteChan := make(chan int,1) // quite channel for sync 2 routines
+	quiteChan := make(chan int, 1) // quite channel for sync 2 routines
 	defer close(quiteChan)
 
 	// set src
 	//deviceID := 0
 	//deviceID := "rtmp://58.200.131.2:1935/livetv/hunantv"
-	deviceID := "rtmp://192.168.11.174:1935/live/movie"
+	deviceID := "rtmp://192.168.2.143:1935/live/movie"
 
 	// open webCam
 	webCam, err := gocv.OpenVideoCapture(deviceID)
@@ -429,12 +429,12 @@ func cameraMultiObjShowRecFacesWithName2(rec *face.Recognizer,labels[] string){
 	fmt.Println("open webCam ok")
 
 	// get frame from camera to frameQueue for rec,argsChan for ffmpeg push
-	go getFrameFromCameraToQueue(webCam,frameQueue,quiteChan)
+	go getFrameFromCameraToQueue(webCam, frameQueue, quiteChan)
 	wg.Add(1)
 	time.Sleep(1)
 
 	// get frame from frameQueue to rec && tracke,then push it to rtmp server
-	go recFaceAndMarkName(webCam,frameQueue,quiteChan,rec,labels)
+	go recFaceAndMarkName(webCam, frameQueue, quiteChan, rec, labels)
 	wg.Add(1)
 	time.Sleep(1)
 
@@ -442,32 +442,33 @@ func cameraMultiObjShowRecFacesWithName2(rec *face.Recognizer,labels[] string){
 	fmt.Println("main exit...")
 }
 
-func getFrameFromCameraToQueue(webCam *gocv.VideoCapture,fQueue *queue.Queue,quiteChan chan int) {
+func getFrameFromCameraToQueue(webCam *gocv.VideoCapture, fQueue *queue.Queue, quiteChan chan int) {
 	defer wg.Done()
 
 	// prepare image matrix
 	img := gocv.NewMat()
 	defer img.Close()
 
-loopGetFrame: for {
+loopGetFrame:
+	for {
 		// select for listenning quite msg from rec/push frame routine
 		select {
-			case qMsg := <-quiteChan:
-				if qMsg == 2{
-					fmt.Printf("get routine: quite msg from rec frame routine.\n")
-					break loopGetFrame
-				}
-			default:
-				// do nothing
+		case qMsg := <-quiteChan:
+			if qMsg == 2 {
+				fmt.Printf("get routine: quite msg from rec frame routine.\n")
+				break loopGetFrame
+			}
+		default:
+			// do nothing
 			//case <-time.After(3 * time.Millisecond):
-				// wait 3 ms, do nothing while timeout
+			// wait 3 ms, do nothing while timeout
 		}
 
 		if webCam.IsOpened() {
 			// read frame from cam
 			if ok := webCam.Read(&img); !ok {
 				fmt.Printf("cannot read webCam device.\n")
-				quiteChan<-stopGetFrame
+				quiteChan <- stopGetFrame
 				break
 			}
 			if img.Empty() {
@@ -482,13 +483,13 @@ loopGetFrame: for {
 			fQueue.Add(img)
 		} else {
 			fmt.Println("webCam has been closed!")
-			quiteChan<-stopGetFrame
+			quiteChan <- stopGetFrame
 			break
 		}
 	}
 }
 
-func recFaceAndMarkName(webCam *gocv.VideoCapture,fQueue *queue.Queue,quiteChan chan int,rec *face.Recognizer,labels[] string){
+func recFaceAndMarkName(webCam *gocv.VideoCapture, fQueue *queue.Queue, quiteChan chan int, rec *face.Recognizer, labels []string) {
 	defer wg.Done()
 
 	// prepare image matrix
@@ -497,10 +498,10 @@ func recFaceAndMarkName(webCam *gocv.VideoCapture,fQueue *queue.Queue,quiteChan 
 
 	// color for the rect when faces detected
 	blue := color.RGBA{0, 0, 255, 0}
-	var recCamMultiName[30] string
+	var recCamMultiName [30]string
 	cameraTmpImgPath := filepath.Join(testDir, "cameratmptest.jpg")
 
-	var trackers []contrib.Tracker
+	var trackers []gocv.Tracker
 	var lastFaceCnt int
 	var trackAll bool
 
@@ -522,43 +523,44 @@ func recFaceAndMarkName(webCam *gocv.VideoCapture,fQueue *queue.Queue,quiteChan 
 	cmd := exec.Command(list[0], list[1:]...)
 	cmdIn, err := cmd.StdinPipe()
 	if err != nil {
-		fmt.Printf("%v\n",err)
-		quiteChan<-stopRecFrame
+		fmt.Printf("%v\n", err)
+		quiteChan <- stopRecFrame
 		return
 	}
 	defer cmdIn.Close()
 	if err := cmd.Start(); err != nil {
-		fmt.Printf("%v\n",err)
-		quiteChan<-stopRecFrame
+		fmt.Printf("%v\n", err)
+		quiteChan <- stopRecFrame
 		return
 	}
 
-loopRecFrame: for {
+loopRecFrame:
+	for {
 		// select for listenning quite msg from get/push frame routine
 		select {
-			case qMsg := <-quiteChan:
-				if qMsg == 1{
-					fmt.Printf("rec routine: quite msg from get frame routine.\n")
-					break loopRecFrame
-				}
-			default:
-				// do nothing
+		case qMsg := <-quiteChan:
+			if qMsg == 1 {
+				fmt.Printf("rec routine: quite msg from get frame routine.\n")
+				break loopRecFrame
+			}
+		default:
+			// do nothing
 			//case <-time.After(3 * time.Millisecond):
-				// wait 3 ms, do nothing while timeout
+			// wait 3 ms, do nothing while timeout
 		}
 
 		if fQueue.Length() > 0 {
 			queueImg := fQueue.Get(0)
 			switch qImg := queueImg.(type) {
-				case gocv.Mat:
-					recImg = qImg
-				default:
-					continue
+			case gocv.Mat:
+				recImg = qImg
+			default:
+				continue
 			}
 
 			////////////////////////////////////////////////////////////////////
 			// rec each face in recImg
-			gocv.IMWrite(cameraTmpImgPath,recImg)
+			gocv.IMWrite(cameraTmpImgPath, recImg)
 			faces, err := rec.RecognizeFileCNN(cameraTmpImgPath)
 			//faces, err := rec.RecognizeCNN([]byte(recImg.ToBytes()))
 			if err != nil {
@@ -569,29 +571,30 @@ loopRecFrame: for {
 			}
 			//fmt.Printf("lastFaceCnt=%d,len(faces)=%d\n",lastFaceCnt,len(faces))
 
-			if len(trackers) == 0 || lastFaceCnt != len(faces){
+			if len(trackers) == 0 || lastFaceCnt != len(faces) {
 				// rec name from faces && init tracker for each face.
 				// clear condition
 				trackers = trackers[0:0]
 
-				if len(faces) > 0{
+				if len(faces) > 0 {
 					// get each face's name from lables[] and init tracker...
 					for i, f := range faces {
-						faceID :=rec.ClassifyThreshold(f.Descriptor,0.30)
+						faceID := rec.ClassifyThreshold(f.Descriptor, 0.30)
 						if faceID < 0 {
 							recCamMultiName[i] = "unkown"
-						}else {
+						} else {
 							recCamMultiName[i] = labels[faceID]
 						}
 
-						tracker := contrib.NewTrackerMedianFlow()
-						tracker.Init(recImg,f.Rectangle)
+						//tracker := contrib.NewTrackerKCF()
+						tracker := contrib.NewTrackerCSRT()
+						tracker.Init(recImg, f.Rectangle)
 						trackers = append(trackers, tracker)
 					}
 				}
 
 				lastFaceCnt = len(faces)
-			}else if len(trackers) !=0 && lastFaceCnt == len(faces){
+			} else if len(trackers) != 0 && lastFaceCnt == len(faces) {
 				// track frame
 				trackAll = true
 
@@ -606,15 +609,15 @@ loopRecFrame: for {
 						//gocv.Rectangle(&recImg, faces[i].Rectangle, blue, 3)
 						//pt := image.Pt(faces[i].Rectangle.Min.X, faces[i].Rectangle.Min.Y-20)
 						//gocv.PutText(&recImg, recCamMultiName[i], pt, gocv.FontHersheyPlain, 2, blue, 2)
-					}else{
-						fmt.Printf("track %s failed,reInit tracker again.\n",recCamMultiName[i])
+					} else {
+						fmt.Printf("track %s failed,reInit tracker again.\n", recCamMultiName[i])
 						trackAll = false
 						break
 					}
 				}
 
 				// tracking someone failed,reRecognize to track
-				if !trackAll{
+				if !trackAll {
 					for _, t := range trackers {
 						t.Close()
 					}
@@ -628,7 +631,7 @@ loopRecFrame: for {
 			_, err = cmdIn.Write([]byte(recImg.ToBytes()))
 			if err != nil {
 				fmt.Printf("%v\n", err)
-				quiteChan<-stopRecFrame
+				quiteChan <- stopRecFrame
 				break
 			}
 		}
